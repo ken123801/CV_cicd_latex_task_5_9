@@ -1,0 +1,37 @@
+name: Build and Release LaTeX CV
+
+# 触发条件：当你推送以 v 开头的标签（如 v1.0, v2.0）时触发
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    
+    # 必须赋予写权限，否则无法发布 Release
+    permissions:
+      contents: write
+    
+    steps:
+      # 1. 检出代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. 编译 LaTeX 文件
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          # 关键点 1：指定简历所在的子文件夹路径
+          working_directory: CV_in_latex
+          # 关键点 2：指定该文件夹下的主文件名称
+          root_file: main.tex
+
+      # 3. 创建 GitHub Release 并上传 PDF
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          # 关键点 3：指定编译生成的 PDF 文件的准确位置
+          files: CV_in_latex/main.pdf
+          generate_release_notes: true
