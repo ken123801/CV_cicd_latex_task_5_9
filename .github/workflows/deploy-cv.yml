@@ -27,6 +27,7 @@ jobs:
           working_directory: CV_in_latex
           # 关键点 2：指定该文件夹下的主文件名称
           root_file: main.tex
+          compiler: xelatex
 
       # 3. 创建 GitHub Release 并上传 PDF
       - name: Create GitHub Release
